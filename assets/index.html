@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a161b"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://api.frankfurter.dev https://query1.finance.yahoo.com https://query2.finance.yahoo.com; img-src 'self' data:; object-src 'none'; base-uri 'none'"><title>汇率随行</title><link rel="stylesheet" href="style.css"><script src="theme-init.js"></script></head>
+<body>
+<div class="app">
+<header><div class="brand"><span class="brand-icon">↗</span><div><h1>汇率随行</h1><p>世界货币，随手掌握</p></div></div><button class="icon-btn" id="refresh" aria-label="刷新汇率">↻</button></header>
+<main>
+<section id="convertPage" class="page">
+<div class="eyebrow"><span class="live-dot"></span><span id="marketState">正在连接汇率数据</span><button id="favorite" class="favorite" aria-label="收藏当前目标货币">☆</button></div>
+<div class="headline"><div class="pair-heading" id="pairHeading">USD / CNY</div><div class="hero-rate" id="heroRate">—</div><div class="hero-foot"><span id="heroCaption">1 美元可兑换的人民币</span><span id="change" class="change">—</span></div></div>
+<div class="converter card">
+<div class="money-row"><button class="currency-select" id="baseBtn"><span class="flag" id="baseFlag">🇺🇸</span><span><b id="baseCode">USD</b><small id="baseName">美元</small></span><span class="chevron">⌄</span></button><div class="money-input"><label for="amount">兑换金额</label><input id="amount" inputmode="decimal" type="text" value="100" maxlength="18" autocomplete="off" aria-label="兑换金额"></div></div>
+<div class="divider"><span></span><button id="swap" aria-label="交换货币">⇅</button><span></span></div>
+<div class="money-row"><button class="currency-select" id="quoteBtn"><span class="flag" id="quoteFlag">🇨🇳</span><span><b id="quoteCode">CNY</b><small id="quoteName">人民币</small></span><span class="chevron">⌄</span></button><div class="money-output"><span>预计兑换</span><output id="converted">—</output></div></div>
+<div id="conversionNote" class="conversion-note">按市场参考汇率估算</div>
+</div>
+<section class="chart-section"><div class="section-heading"><h2>汇率走势</h2><span id="chartInterval">—</span></div><div class="range-tabs" role="group" aria-label="曲线时间范围"><button data-range="1d">日</button><button data-range="1w">周</button><button data-range="1m" class="active">月</button><button data-range="1y">年</button><button data-range="5y">五年</button></div>
+<div class="chart-wrap" id="chartWrap"><div class="chart-tooltip" id="tooltip" hidden></div><canvas id="chart" aria-label="汇率历史曲线，可拖动查看数值" role="img"></canvas><div class="chart-empty" id="chartEmpty">正在获取历史汇率…</div></div>
+<div class="chart-stats"><div><span>区间最低</span><strong id="low">—</strong></div><div><span>区间最高</span><strong id="high">—</strong></div><div><span>区间涨跌</span><strong id="periodChange">—</strong></div></div>
+<p id="chartNote" class="source-note">曲线按原始报价绘制</p></section>
+<div class="status-box" id="status" role="status">联网后自动加载最新可用报价</div>
+<p class="footer-note">参考汇率 · 银行及支付平台的成交价可能不同</p>
+</section>
+<section id="watchPage" class="page" hidden><div class="page-title"><div><p class="eyebrow-label">YOUR WATCHLIST</p><h2>常用货币</h2></div><button class="text-btn" id="addWatch">＋ 添加</button></div><div class="watch-base card"><span>以 <b id="watchBase">100 USD</b> 换算</span><small>每日参考价</small></div><div id="watchList"></div><p class="source-note" id="watchStatus">点击货币查看曲线</p><button class="outline-btn" id="browseAll">浏览全部货币</button></section>
+<section id="settingsPage" class="page" hidden><div class="page-title"><div><p class="eyebrow-label">MAKE IT YOURS</p><h2>偏好设置</h2></div></div><div class="card appearance-card"><h3>外观模式</h3><p>切换后立即生效，下次打开保留你的选择。</p><div class="theme-options" role="group" aria-label="外观模式"><button class="theme-choice" data-theme-choice="light" aria-pressed="false"><span class="theme-symbol" aria-hidden="true">☀</span><b>标准模式</b><small>明亮清晰</small></button><button class="theme-choice" data-theme-choice="dark" aria-pressed="false"><span class="theme-symbol" aria-hidden="true">☾</span><b>黑暗模式</b><small>深色柔和</small></button></div></div><div class="card settings-card"><label class="setting"><span><b>自动刷新</b><small>应用打开时，每 60 秒获取报价</small></span><input type="checkbox" id="autoRefresh" role="switch" checked></label><label class="setting"><span><b>换算小数位</b><small>曲线和单价保留更多有效位</small></span><select id="decimals"><option value="2">2 位</option><option value="4">4 位</option></select></label></div><div class="card about"><h3>了解报价来源</h3><p>日内行情来自 Yahoo Finance，可能有延迟。屏幕会显示报价时间；自动刷新不代表源数据每分钟更新。</p><p>行情不可用时，切换为 Frankfurter 的每日参考价。日内数据缺失时不会生成虚构曲线。少数货币可能没有完整五年历史。</p><p>周末、节假日或休市期间可能显示最近交易日的数据。不同来源的参考价可能存在差异。</p><div class="source-links"><a href="https://finance.yahoo.com/currencies/">Yahoo Finance ↗</a><a href="https://frankfurter.dev/">Frankfurter ↗</a></div></div><div class="card about"><h3>轻量，也安心</h3><p>无需账号，无广告。偏好和最近查询缓存保存在手机上。网络请求仅发送所选货币与时间范围，不发送你的兑换金额。</p><button class="text-btn" id="clearCache">清除行情缓存</button></div><p class="footer-note">汇率随行 · 1.0.0<br>Android 8.0 及以上</p></section>
+</main>
+<nav class="bottom-nav" aria-label="主导航"><button data-page="convert" class="selected"><span>⇄</span>换算</button><button data-page="watch"><span>☆</span>自选</button><button data-page="settings"><span>⚙</span>设置</button></nav>
+</div>
+<div id="pickerOverlay" class="overlay" hidden><section class="picker" role="dialog" aria-modal="true" aria-labelledby="pickerTitle"><div class="picker-head"><h2 id="pickerTitle">选择货币</h2><button class="icon-btn" id="closePicker" aria-label="关闭">×</button></div><input id="search" type="search" placeholder="搜索货币、国家或代码" autocomplete="off"><p class="source-note" id="currencyCount"></p><div id="currencyList" class="currency-list"></div></section></div><div id="toast" role="status" hidden></div>
+<script src="app.js"></script></body></html>
